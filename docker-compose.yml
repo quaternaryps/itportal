@@ -1,0 +1,12 @@
+services:
+  itmenu:
+    image: itmenu:v4
+    container_name: itmenu
+    ports:
+      - "3001:3000"
+    volumes:
+      - itmenu-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  itmenu-data:

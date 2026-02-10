@@ -1,0 +1,174 @@
+================================================================
+  ITMenu - IT Admin Dashboard
+  Customer Deployment Guide
+================================================================
+
+PREREQUISITES
+----------------------------------------------------------------
+- Docker Engine 20.10+ installed on the target system
+- Docker Compose v2 (included with modern Docker installs)
+- Firewall access to the chosen port (default: 3001)
+
+
+STEP 1: COPY FILES TO THE NEW SYSTEM
+----------------------------------------------------------------
+You need TWO files from the source system:
+
+  /home/rabarr/ITMenu/itmenu-v1.tar        (Docker image, ~68MB)
+  /home/rabarr/ITMenu/frontend-next/docker-compose.yml
+
+Copy them to the target system using scp, USB drive, or any
+file transfer method. Place them in a working directory:
+
+  Example:
+    mkdir -p /opt/itmenu
+    cp itmenu-v1.tar /opt/itmenu/
+    cp docker-compose.yml /opt/itmenu/
+
+
+STEP 2: LOAD THE DOCKER IMAGE
+----------------------------------------------------------------
+On the target system, load the image from the tar file:
+
+    cd /opt/itmenu
+    docker load -i itmenu-v1.tar
+
+Verify the image was loaded:
+
+    docker images itmenu
+
+You should see:
+    REPOSITORY   TAG       SIZE
+    itmenu       v1        ~68MB
+
+
+STEP 3: CUSTOMIZE THE PORT (IF NEEDED)
+----------------------------------------------------------------
+Edit docker-compose.yml to set the external port for this
+customer's network. The format is HOST_PORT:CONTAINER_PORT.
+
+    Default:
+      ports:
+        - "3001:3000"
+
+    Change the left side (3001) to any available port:
+      ports:
+        - "8080:3000"
+
+    Do NOT change the right side (3000) — that is the internal
+    container port and must stay as 3000.
+
+The app will then be accessible at:
+
+    http://<CUSTOMER-LAN-IP>:<HOST_PORT>
+
+    Example: http://192.168.1.50:8080
+
+
+STEP 4: OPEN THE FIREWALL
+----------------------------------------------------------------
+The host firewall must allow inbound traffic on the chosen port.
+
+  UFW (Ubuntu/Debian):
+    sudo ufw allow 3001/tcp
+
+  firewalld (RHEL/CentOS/Fedora):
+    sudo firewall-cmd --permanent --add-port=3001/tcp
+    sudo firewall-cmd --reload
+
+  Windows Firewall:
+    Open "Windows Defender Firewall with Advanced Settings"
+    Add an Inbound Rule for TCP port 3001
+
+Replace 3001 with whatever port you set in Step 3.
+
+
+STEP 5: START THE CONTAINER
+----------------------------------------------------------------
+    cd /opt/itmenu
+    docker compose up -d
+
+Verify it is running:
+
+    docker ps --filter name=itmenu
+
+You should see the container with status "Up" and the port
+mapping you configured.
+
+Test from the host itself:
+
+    curl http://localhost:3001
+
+Test from a browser on the LAN:
+
+    http://<CUSTOMER-LAN-IP>:3001
+
+
+STEP 6: VERIFY PERSISTENCE
+----------------------------------------------------------------
+The docker-compose.yml includes "restart: unless-stopped",
+which means the container will automatically restart:
+
+  - After a system reboot
+  - After a Docker service restart
+  - After an unexpected container crash
+
+The ONLY time it will NOT restart is if you manually stop it:
+
+    docker compose down
+
+
+COMMON OPERATIONS
+----------------------------------------------------------------
+
+  Stop the app:
+    cd /opt/itmenu && docker compose down
+
+  Restart the app:
+    cd /opt/itmenu && docker compose restart
+
+  View logs:
+    docker logs itmenu
+
+  View live logs:
+    docker logs -f itmenu
+
+  Check status:
+    docker ps --filter name=itmenu
+
+
+UPGRADING TO A NEW VERSION
+----------------------------------------------------------------
+When a new image is provided (e.g. itmenu-v2.tar):
+
+    cd /opt/itmenu
+    docker compose down
+    docker load -i itmenu-v2.tar
+
+Update the image tag in docker-compose.yml:
+
+    image: itmenu:v2
+
+Then start the new version:
+
+    docker compose up -d
+
+
+TROUBLESHOOTING
+----------------------------------------------------------------
+
+  "port is already allocated"
+    Another service is using that port. Choose a different
+    HOST_PORT in docker-compose.yml.
+
+  "connection timed out" from browser
+    The firewall is blocking the port. See Step 4.
+
+  "connection refused" from browser
+    The container is not running. Run: docker compose up -d
+
+  Container keeps restarting
+    Check logs: docker logs itmenu
+    Most likely a port conflict or resource issue.
+
+================================================================
