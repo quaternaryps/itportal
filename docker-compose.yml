@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # Main application service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: itportal-app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app/src
+      - ./data:/app/data
+    environment:
+      - ENVIRONMENT=development
+      - LOG_LEVEL=debug
+    restart: unless-stopped
+    networks:
+      - itportal-network
+
+  # Database service (example - can be customized)
+  db:
+    image: postgres:15-alpine
+    container_name: itportal-db
+    environment:
+      - POSTGRES_USER=itportal
+      - POSTGRES_PASSWORD=itportal_password
+      - POSTGRES_DB=itportal
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - itportal-network
+
+  # Redis cache (optional)
+  cache:
+    image: redis:7-alpine
+    container_name: itportal-cache
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - itportal-network
+
+networks:
+  itportal-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
