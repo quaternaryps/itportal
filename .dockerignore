@@ -7,10 +7,10 @@ Dockerfile
 docker-compose.yml
 .dockerignore
 
-# Documentation
-README.md
+# Development documentation (keeping essential docs for runtime)
 CONTRIBUTING.md
-docs/
+CLAUDE_CODE_GUIDE.md
+validate-setup.sh
 
 # Python
 __pycache__
