@@ -1,0 +1,15 @@
+# Backend Dockerfile for Deno
+FROM denoland/deno:alpine-2.1.9
+
+WORKDIR /app
+
+# Copy application files
+COPY backend/ .
+
+# Set environment variables
+ENV PORT=8000
+
+EXPOSE 8000
+
+# Run the application (dependencies will be cached on first run)
+CMD ["deno", "run", "--allow-net", "--allow-env", "--allow-read", "src/main.ts"]
