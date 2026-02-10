@@ -6,13 +6,10 @@ WORKDIR /app
 # Copy application files
 COPY backend/ .
 
-# Cache the dependencies
-RUN deno cache src/main.ts
-
 # Set environment variables
 ENV PORT=8000
 
 EXPOSE 8000
 
-# Run the application
+# Run the application (dependencies will be cached on first run)
 CMD ["deno", "run", "--allow-net", "--allow-env", "--allow-read", "src/main.ts"]
