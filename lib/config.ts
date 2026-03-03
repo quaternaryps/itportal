@@ -16,11 +16,9 @@ const DEFAULT_NODE_IDS = [
   "nas",
   "server",
   "vm",
-  "vpn",
-  "cloud",
-  "m365",
-  "auth",
-  "secrets",
+  "useraccounts",
+  "networkservices",
+  "appservices",
 ];
 
 function defaultConfig(): AppConfig {

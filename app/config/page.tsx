@@ -7,18 +7,16 @@ import { AppConfig } from "@/lib/types";
 const NODE_LABELS: Record<string, string> = {
   laptop: "Laptops",
   pc: "Workstations",
-  apps: "Apps",
+  apps: "Applications",
   wifi: "WiFi",
   switch: "LAN Switch",
   firewall: "Firewall",
   nas: "NAS Storage",
   server: "Servers",
-  vm: "VMs",
-  vpn: "VPN",
-  cloud: "Cloud / M365",
-  m365: "Microsoft 365",
-  auth: "Authentication",
-  secrets: "Secrets (Infisical)",
+  vm: "Virtual Machines",
+  useraccounts: "User Accounts",
+  networkservices: "Network Services",
+  appservices: "Application Services",
 };
 
 export default function ConfigPage() {

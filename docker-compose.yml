@@ -1,6 +1,6 @@
 services:
   itmenu:
-    image: itmenu:v4
+    image: itmenu:v5
     container_name: itmenu
     ports:
       - "3001:3000"

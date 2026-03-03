@@ -9,11 +9,9 @@ export const CATEGORY_PREFIXES: Record<string, string> = {
   nas: "NASS",
   server: "SERV",
   vm: "VMAC",
-  vpn: "VPNN",
-  cloud: "CLOU",
-  m365: "M365",
-  auth: "AUTH",
-  secrets: "SECR",
+  useraccounts: "UACC",
+  networkservices: "NSVC",
+  appservices: "ASVC",
   general: "GENL",
 };
 
@@ -28,11 +26,9 @@ export const CATEGORY_LABELS: Record<string, string> = {
   nas: "NAS Storage",
   server: "Servers",
   vm: "Virtual Machines",
-  vpn: "VPN",
-  cloud: "Cloud Services",
-  m365: "Microsoft 365",
-  auth: "Authentication",
-  secrets: "Secrets/Infisical",
+  useraccounts: "User Accounts",
+  networkservices: "Network Services",
+  appservices: "Application Services",
   general: "General/Other",
 };
 
